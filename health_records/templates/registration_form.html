@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Registration</title>
+</head>
+<body>
+    <h1>User Registration</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.email.label_tag }} {{ form.email }}
+        {{ form.password.label_tag }} {{ form.password }}
+        {{ form.phone_number.label_tag }} {{ form.phone_number }}
+        {{ form.is_healthcare_worker.label_tag }} {{ form.is_healthcare_worker }}
+        <button type="button">Register</button>
+    </form>
+</body>
+</html>

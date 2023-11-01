@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Appointments</title>
+</head>
+<body>
+    <h1>Manage Appointments</h1>
+    <ul>
+        {% for appointment in appointments %}
+            <li>
+                {{ appointment.patient.username }} - {{ appointment.date_time }}
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    {{ form.as_table }}
+                    <input type="submit" value="Accept">
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

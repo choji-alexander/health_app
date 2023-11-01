@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medical Record Creation</title>
+</head>
+<body>
+    <h1>Medical Record Creation</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Create Medical Record</button>
+    </form>
+</body>
+</html>

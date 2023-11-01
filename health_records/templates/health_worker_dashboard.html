@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Health Worker Dashboard</title>
+</head>
+<body>
+    <h1>Health Worker Dashboard</h1>
+
+    <h2>Appointments</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date and Time</th>
+                <th>Patient</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.date_time }}</td>
+                    <td>{{ appointment.patient.username }}</td>
+                    <td>Accepted</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Statistics</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Disease</th>
+            <th>Appointment Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for disease, count in statistics.items %}
+            <tr>
+                <td>{{ disease }}</td>
+                <td>{{ count }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>

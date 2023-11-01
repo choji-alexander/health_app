@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Medical Records</title>
+</head>
+<body>
+    <h1>User Medical Records</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Disease</th>
+                <th>Symptoms</th>
+                <th>Diagnosis</th>
+                <th>Prescription</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone_number }}</td>
+                    {% with medical_record=user.medicalrecord %}
+                        <td>{{ medical_record.disease }}</td>
+                        <td>{{ medical_record.symptoms }}</td>
+                        <td>{{ medical_record.diagnosis }}</td>
+                        <td>{{ medical_record.prescription }}</td>
+                    {% endwith %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

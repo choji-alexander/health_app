@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search and Book Appointment</title>
+</head>
+<body>
+    <h1>Search and Book Appointment</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ appointment_form.as_p }}
+        {{ email_form.as_p }}
+        <input type="submit" value="Request Appointment">
+    </form>
+</body>
+</html>
