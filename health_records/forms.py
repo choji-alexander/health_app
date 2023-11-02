@@ -9,12 +9,6 @@ class HealthWorkerRegistrationForm(forms.ModelForm):
         fields = ['email', 'phone_number', 'is_healthcare_worker', 'password']
 
 
-class PatientRegistrationForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['email', 'phone_number', 'is_healthcare_worker', 'password']
-
-
 class MedicalRecordForm(forms.ModelForm):
     class Meta:
         model = MedicalRecord

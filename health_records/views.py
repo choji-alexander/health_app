@@ -1,6 +1,7 @@
 from django.contrib.auth import login
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from .forms import HealthWorkerRegistrationForm, PatientRegistrationForm
+from .forms import HealthWorkerRegistrationForm
 from django.contrib.auth.decorators import login_required
 from .forms import MedicalRecordForm, CustomAuthenticationForm
 from .models import User, MedicalRecord
@@ -37,53 +38,60 @@ matplotlib.use('Agg')
     # return render(request, 'registration_form.html', {'form': form})
 
 
+#def login_view(request):
+#    if request.method == 'POST':
+#        form = CustomAuthenticationForm(request, request.POST)
+#        if form.is_valid():
+#            user = form.get_user()
+#            login(request, user)
+#            if request.user.is_healthcare_worker:
+#                return redirect('health_worker_dashboard')
+#            else:
+#                return redirect('search_and_book_appointment')
+#    else:
+#        form = CustomAuthenticationForm()
+#    return render(request, 'login.html', {'form': form})
+
+
 def login_view(request):
-    if request.method == 'POST' and request.is_healthcare_worker:
+    if request.method == 'POST':
         form = CustomAuthenticationForm(request, request.POST)
         if form.is_valid():
             user = form.get_user()
-            login(request, user)
-            return redirect('health_worker_dashboard')
+            if user is not None and user.is_authenticated and user.is_healthcare_worker:
+                # Access the user object
+                username = user.username
+                is_healthcare_worker = user.is_healthcare_worker
 
-    elif request.method == 'POST':
-        form = CustomAuthenticationForm(request, request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('search_and_book_appointment')
-
+                # Perform actions based on user attributes
+                if is_healthcare_worker:
+                    return redirect('health_worker_dashboard')
+                else:
+                    return redirect('search_and_book_appointment')
+            else:
+                # Authentication failed, display an error message or redirect accordingly
+                return HttpResponse("Invalid login credentials or not a healthcare worker")
+        else:
+            # Handle the case where the form is not valid (e.g., incorrect credentials)
+            return HttpResponse("Invalid form data")
     else:
+        # Handle GET requests or render the login form
         form = CustomAuthenticationForm()
 
+        # You can render a form for logging in or redirect to a login page
     return render(request, 'login.html', {'form': form})
 
 
-def health_worker_registration(request):
+def user_registration(request):
     if request.method == 'POST':
         form = HealthWorkerRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_healthcare_worker = True  # Set the user as a health worker
             user.save()
             login(request, user)
         return redirect('registration_success')
     else:
         form = HealthWorkerRegistrationForm()
-
-    return render(request, 'registration_form.html', {'form': form})
-
-
-def patient_registration(request):
-    if request.method == 'POST':
-        form = PatientRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_healthcare_worker = False  # Set the user as a health worker
-            user.save()
-            login(request, user)
-            return redirect('registration_success')
-    else:
-        form = PatientRegistrationForm()
 
     return render(request, 'registration_form.html', {'form': form})
 
