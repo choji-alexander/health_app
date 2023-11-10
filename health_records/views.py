@@ -1,4 +1,6 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
+# from health_records.authentication.EmailBackend import authenticate
+from django.contrib.auth.backends import ModelBackend
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .forms import HealthWorkerRegistrationForm
@@ -38,7 +40,7 @@ matplotlib.use('Agg')
     # return render(request, 'registration_form.html', {'form': form})
 
 
-#def login_view(request):
+# def login_view(request):
 #    if request.method == 'POST':
 #        form = CustomAuthenticationForm(request, request.POST)
 #        if form.is_valid():
@@ -57,20 +59,29 @@ def login_view(request):
     if request.method == 'POST':
         form = CustomAuthenticationForm(request, request.POST)
         if form.is_valid():
-            user = form.get_user()
-            if user is not None and user.is_authenticated and user.is_healthcare_worker:
-                # Access the user object
-                username = user.username
-                is_healthcare_worker = user.is_healthcare_worker
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
 
-                # Perform actions based on user attributes
-                if is_healthcare_worker:
-                    return redirect('health_worker_dashboard')
+            user = authenticate(request, email=email, password=password)
+
+            if user is not None:
+                if user.is_authenticated:
+                    if user.is_healthcare_worker:
+                        # Access the user object
+                        email = user.email
+                        is_healthcare_worker = user.is_healthcare_worker
+
+                        # Perform actions based on user attributes
+                        if is_healthcare_worker:
+                            return redirect('health_worker_dashboard')
+                        else:
+                            return redirect('search_and_book_appointment')
+                    else:
+                        return redirect("search_and_book_appointment")
                 else:
-                    return redirect('search_and_book_appointment')
+                    return HttpResponse("User is not authenticated")
             else:
-                # Authentication failed, display an error message or redirect accordingly
-                return HttpResponse("Invalid login credentials or not a healthcare worker")
+                return HttpResponse("Invalid login credentials")
         else:
             # Handle the case where the form is not valid (e.g., incorrect credentials)
             return HttpResponse("Invalid form data")

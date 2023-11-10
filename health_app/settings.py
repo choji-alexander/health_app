@@ -101,6 +101,11 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'health_records.User'
+AUTHENTICATION_BACKENDS = [
+    'health_records.authentication.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 
 
 # Internationalization
